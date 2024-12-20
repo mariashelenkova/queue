@@ -7,9 +7,11 @@ template<class T>
 class Queue
 {
     std::vector<T> data;
+    size_t head;
+    size_t a;
 
 public:
-    Queue(int n = 0, T value = T())
+    Queue(int n = 0, T value = T()) : head(0), a(0)
     {
         if (n < 0)
         {
@@ -22,6 +24,7 @@ public:
     void push(const T& val) noexcept
     {
         data.push_back(val);
+        a++;
     }
 
     void pop()
@@ -31,7 +34,7 @@ public:
             throw "Error";
         }
 
-        data.erase(data.begin());
+        head++;
     }
 
     T& top()
@@ -41,16 +44,23 @@ public:
             throw "Error";
         }
 
-        return data.back();
+        return data[head];
     }
 
     bool empty() noexcept
     {
-        return data.empty();
+        return head == a;
     }
 
     size_t size()
     {
-        return data.size();
+        return a - head;
+    }
+
+    void clear() noexcept
+    {
+        head = 0;
+        a = 0;
+        data.resize(0);
     }
 };
