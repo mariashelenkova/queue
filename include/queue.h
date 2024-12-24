@@ -6,6 +6,21 @@
 template<class T>
 class Queue
 {
+private:
+    void resize(size_t new_capacity)
+    {
+        std::vector<T> new_data(new_capacity);
+        for (size_t i = 0; i < count; ++i)
+        {
+            new_data[i] = data[(head + i) % capacity];
+        }
+
+        data = std::move(new_data);
+        head = 0;
+        tail = count;
+        capacity = new_capacity;
+    }
+
     std::vector<T> data;
     size_t head; // Указывает на начало очереди
     size_t tail; // Указывает на конец очереди
@@ -13,11 +28,11 @@ class Queue
     size_t capacity; // Размер буфера
 
 public:
-    Queue(int n = 0, T value = T()) : head(0), tail(0), count(0), capacity(n)
+    Queue(int n = 4, T value = T()) : head(0), tail(0), count(0), capacity(n)
     {
-        if (n < 0)
+        if (n <= 0)
         {
-            throw "Error";
+            throw "Capacity must be greater than zero";
         }
 
         data = std::vector<T>(capacity, value);
@@ -27,7 +42,7 @@ public:
     {
         if (count == capacity)
         {
-            throw "Error";
+            resize(capacity * 2);
         }
 
         data[tail] = val;
@@ -39,7 +54,7 @@ public:
     {
         if (empty())
         {
-            throw "Error";
+            throw "Queue is empty";
         }
 
         head = (head + 1) % capacity;
@@ -50,7 +65,7 @@ public:
     {
         if (empty())
         {
-            throw "Error";
+            throw "Queue is empty";
         }
 
         return data[head];

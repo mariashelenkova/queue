@@ -13,7 +13,7 @@ TEST(Queue, throws_when_create_queue_with_negative_size)
 
 TEST(Queue, can_push_element_to_queue_size)
 {
-    Queue<int> queue(10); // Задан размер буфера
+    Queue<int> queue(10);
 
     queue.push(5);
 
@@ -146,17 +146,6 @@ TEST(Queue, top_updates_correctly_after_pop)
     EXPECT_EQ(queue.top(), 10);
 }
 
-TEST(Queue, throws_when_push_to_full_queue)
-{
-    Queue<int> queue(3);
-
-    queue.push(1);
-    queue.push(2);
-    queue.push(3);
-
-    ASSERT_ANY_THROW(queue.push(4));
-}
-
 TEST(Queue, works_correctly_with_circular_buffer_top)
 {
     Queue<int> queue(3);
@@ -181,4 +170,171 @@ TEST(Queue, works_correctly_with_circular_buffer_size)
     queue.push(4);
 
     EXPECT_EQ(queue.size(), 3);
+}
+
+TEST(Queue, can_increase_capacity_when_full_size)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+
+    EXPECT_EQ(queue.size(), 3);
+}
+
+TEST(Queue, can_increase_capacity_when_full_top)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    queue.push(4);
+
+    EXPECT_EQ(queue.top(), 1);
+}
+
+TEST(Queue, can_push_elements_after_resizing)
+{
+    Queue<int> queue(2);
+
+    queue.push(1);
+    queue.push(2);
+
+    EXPECT_EQ(queue.size(), 2);
+}
+
+TEST(Queue, can_push_elements_after_resizing_size)
+{
+    Queue<int> queue(2);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    queue.push(4);
+
+    EXPECT_EQ(queue.size(), 4);
+}
+
+TEST(Queue, can_push_elements_after_resizing_top)
+{
+    Queue<int> queue(2);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    queue.push(4);
+
+    EXPECT_EQ(queue.top(), 1);
+}
+
+TEST(Queue, can_pop_elements_after_resizing_size)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+
+    queue.push(4);
+
+    queue.pop();
+
+    EXPECT_EQ(queue.size(), 3);
+}
+
+TEST(Queue, can_pop_elements_after_resizing_top)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+
+    queue.push(4);
+
+    queue.pop();
+
+    EXPECT_EQ(queue.top(), 2);
+}
+TEST(Queue, can_handle_multiple_resizes_size)
+{
+    Queue<int> queue(2);
+
+    for (int i = 1; i <= 10; ++i)
+    {
+        queue.push(i);
+        EXPECT_EQ(queue.size(), i);
+    }
+}
+
+TEST(Queue, can_push_elements_with_wrap_around)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+
+    queue.pop();
+
+    queue.push(4);
+
+    EXPECT_EQ(queue.top(), 2);
+}
+
+TEST(Queue, can_push_to_empty_queue_size)
+{
+    Queue<int> queue(2);
+    queue.push(1);
+
+    EXPECT_EQ(queue.size(), 1);
+}
+
+TEST(Queue, can_push_to_empty_queue_top)
+{
+    Queue<int> queue(2);
+    queue.push(1);
+
+    EXPECT_EQ(queue.top(), 1);
+}
+
+TEST(Queue, can_push_multiple_elements)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+
+    EXPECT_EQ(queue.size(), 3);
+}
+
+TEST(Queue, can_push_elements_after_pop_size)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.pop();
+
+    queue.push(3);
+    queue.push(4);
+
+    EXPECT_EQ(queue.size(), 3);
+}
+
+TEST(Queue, can_push_elements_after_pop_top)
+{
+    Queue<int> queue(3);
+
+    queue.push(1);
+    queue.push(2);
+    queue.pop();
+
+    queue.push(3);
+    queue.push(4);
+
+    EXPECT_EQ(queue.top(), 2);
 }
