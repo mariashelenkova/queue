@@ -7,24 +7,32 @@ template<class T>
 class Queue
 {
     std::vector<T> data;
-    size_t head;
-    size_t a;
+    size_t head; // Указывает на начало очереди
+    size_t tail; // Указывает на конец очереди
+    size_t count; // Количество элементов в очереди
+    size_t capacity; // Размер буфера
 
 public:
-    Queue(int n = 0, T value = T()) : head(0), a(0)
+    Queue(int n = 0, T value = T()) : head(0), tail(0), count(0), capacity(n)
     {
         if (n < 0)
         {
             throw "Error";
         }
 
-        data = std::vector<T>(n, value);
+        data = std::vector<T>(capacity, value);
     }
 
-    void push(const T& val) noexcept
+    void push(const T& val)
     {
-        data.push_back(val);
-        a++;
+        if (count == capacity)
+        {
+            throw "Error";
+        }
+
+        data[tail] = val;
+        tail = (tail + 1) % capacity;
+        count++;
     }
 
     void pop()
@@ -34,7 +42,8 @@ public:
             throw "Error";
         }
 
-        head++;
+        head = (head + 1) % capacity;
+        count--;
     }
 
     T& top()
@@ -47,20 +56,20 @@ public:
         return data[head];
     }
 
-    bool empty() noexcept
+    bool empty() const noexcept
     {
-        return head == a;
+        return count == 0;
     }
 
-    size_t size()
+    size_t size() const noexcept
     {
-        return a - head;
+        return count;
     }
 
     void clear() noexcept
     {
         head = 0;
-        a = 0;
-        data.resize(0);
+        tail = 0;
+        count = 0;
     }
 };
